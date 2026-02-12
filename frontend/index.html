@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subdivision Housing Availability & Mapping System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-building"></i> SubdiHousing
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#subdivisions">Properties</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html"><i class="fas fa-lock"></i> Admin Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-white position-relative overflow-hidden">
+    
+    <div id="heroBgSlider" class="carousel slide carousel-fade position-absolute w-100 h-100" data-bs-ride="carousel" data-bs-interval="2000" style="top:0; left:0; z-index: 1;">
+        <div class="carousel-inner h-100">
+            <div class="carousel-item active h-100">
+                <img src="haha.jpg" class="d-block w-100 h-100 object-fit-cover" alt="Villa Purita View 1">
+            </div>
+            <div class="carousel-item h-100">
+                <img src="hehe.jpg" class="d-block w-100 h-100 object-fit-cover" alt="Villa Purita View 2">
+            </div>
+            <div class="carousel-item h-100">
+                <img src="huhu.jpg" class="d-block w-100 h-100 object-fit-cover" alt="Villa Purita View 3">
+            </div>
+        </div>
+    </div>
+
+    <div class="position-absolute w-100 h-100" style="top:0; left:0; background: rgba(0, 0, 0, 0.5); z-index: 2;"></div>
+
+    <div class="container position-relative py-5" style="z-index: 3;">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="display-4 fw-bold mb-3">Villa Purita - Your Dream Home Awaits</h1>
+                <p class="lead mb-4">Discover premium residential properties in Minglanilla, Cebu. Explore our interactive map to find your perfect home.</p>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-light btn-lg" data-bs-toggle="modal" data-bs-target="#searchModal">
+                        <i class="fas fa-search"></i> Advanced Search
+                    </button>
+                    <button class="btn btn-outline-light btn-lg" onclick="document.querySelector('#mapPreview').scrollIntoView({behavior: 'smooth'})">
+                        <i class="fas fa-map"></i> View Map
+                    </button>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="placeholder-image overflow-hidden shadow-lg">
+                    <img src="purita.jpg" class="hero-img-style w-100 h-100 object-fit-cover" alt="Villa Purita">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Status Legend (1.3) -->
+    <section class="legend-section py-4 bg-light">
+        <div class="container">
+            <h3 class="mb-3"><i class="fas fa-key"></i> Property Status- Villa Purita Subdivision</h3>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="legend-item occupied">
+                        <span class="legend-color occupied"></span>
+                        <span>Occupied</span>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="legend-item vacant">
+                        <span class="legend-color vacant"></span>
+                        <span>Vacant</span>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="legend-item for-sale">
+                        <span class="legend-color for-sale"></span>
+                        <span>For Sale</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Map Preview (1.2) -->
+    <section class="map-preview-section py-5">
+        <div class="container">
+            <h2 class="mb-4"><i class="fas fa-map-location-dot"></i> Villa Purita Subdivision</h2>
+            <div id="mapPreview" class="map-container" style="height: 650px;"></div>
+            <div class="mt-4 d-flex justify-content-between align-items-center">
+                <small class="text-muted"><i class="fas fa-info-circle"></i> Click on markers to view property details. Use scroll wheel to zoom.</small>
+                <div>
+                    <button class="btn btn-sm btn-outline-primary" onclick="map.fitBounds([[10.2550, 123.7970], [10.2600, 123.8050]])">
+                        <i class="fas fa-compass"></i> Reset View
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subdivision Overview (1.1) -->
+    <section id="subdivisions" class="subdivisions-section py-5">
+        <div class="container">
+            <h2 class="mb-4"><i class="fas fa-map"></i> Villa Purita - Minglanilla, Cebu</h2>
+            <div id="subdivisionsList" class="row g-4">
+                <!-- Subdivisions loaded via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Modal -->
+    <div class="modal fade" id="searchModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-filter"></i> Search Properties in Villa Purita</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="searchForm">
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" id="searchStatus">
+                                <option value="">All Status</option>
+                                <option value="occupied">Occupied</option>
+                                <option value="vacant">Vacant</option>
+                                <option value="for_sale">For Sale</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="searchBtn">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5><i class="fas fa-building"></i> SubdiHousing</h5>
+                    <p class="small">Your trusted real estate mapping and property discovery platform. Connecting buyers, sellers, and agents with premium residential opportunities.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Quick Navigation</h5>
+                    <ul class="list-unstyled small">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#subdivisions">Properties</a></li>
+                        <li><a href="login.html">Admin Portal</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Get In Touch</h5>
+                    <p class="small mb-2">
+                        <i class="fas fa-envelope"></i> info@subdihousing.com<br>
+                        <i class="fas fa-phone"></i> +63-2-1234-5678<br>
+                        <i class="fas fa-map-marker"></i> Minglanilla Cebu, Philippines
+                    </p>
+                </div>
+            </div>
+            <hr/>
+            <p class="text-center small mb-0">&copy; 2026 SubdiHousing. All rights reserved. | Premium Real Estate Solutions</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
