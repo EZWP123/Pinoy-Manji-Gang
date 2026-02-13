@@ -315,70 +315,59 @@ window.mapModule = {
     clearMarkers: clearMarkers
 };
 
-const houses = {
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "status": "vacant",
-        "name": "House 101"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [124.651, 8.481]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "status": "occupied",
-        "name": "House 102"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [124.652, 8.482]
-      }
-    }
-  ]
+const housesGeoJSON = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": { "status": "vacant", "name": "House 101" },
+            "geometry": { "type": "Point", "coordinates": [123.802, 10.260] } // Leaflet uses [lat, lng]
+        },
+        {
+            "type": "Feature",
+            "properties": { "status": "occupied", "name": "House 102" },
+            "geometry": { "type": "Point", "coordinates": [123.802, 10.258] }
+        },
+         {
+            "type": "Feature",
+            "properties": { "status": "for_sale", "name": "House 104" },
+            "geometry": { "type": "Point", "coordinates": [123.802, 10.259] }
+        }
+        
+    ]
 };
-map.on('load', () => {
-  map.addSource('houses', {
-    type: 'geojson',
-    data: houses
-  });
+function addHousesLayer() {
+    L.geoJSON(housesGeoJSON, {
+        pointToLayer: function(feature, latlng) {
+            const colorMap = {
+                'vacant': '#2ecc71',
+                'for_sale': '#3498db',
+                'occupied': '#7f8c8d'
+            };
+            return L.circleMarker(latlng, {
+                radius: 8,
+                fillColor: colorMap[feature.properties.status] || '#ccc',
+                color: '#fff',
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.9
+            });
+        },
+        onEachFeature: function(feature, layer) {
+            const status = feature.properties.status;
+            layer.bindPopup(`<b>${feature.properties.name}</b><br>Status: ${status}`);
+            
+            layer.on('mouseover', function() { layer.openPopup(); });
+            layer.on('mouseout', function() { layer.closePopup(); });
 
-  map.addLayer({
-    id: 'houses-layer',
-    type: 'circle',
-    source: 'houses',
-    paint: {
-      'circle-radius': 8,
-      'circle-color': [
-        'match',
-        ['get', 'status'],
-        'vacant', '#2ecc71',
-        'for_sale', '#3498db',
-        'occupied', '#7f8c8d',
-        '#ccc'
-      ]
-    }
-  });
-});
-map.on('click', 'houses-layer', (e) => {
-  const status = e.features[0].properties.status;
+            layer.on('click', function() {
+                if (status === 'occupied') return; // block clicks
+                alert(`Clicked ${feature.properties.name} (${status})`);
+            });
+        }
+    }).addTo(map);
+}
 
-  if (status === 'occupied') return; // ❌ block click
-
-  const name = e.features[0].properties.name;
-
-  new mapboxgl.Popup()
-    .setLngLat(e.lngLat)
-    .setHTML(`<b>${name}</b><br>Status: ${status}`)
-    .addTo(map);
-});
-map.on('mousemove', 'houses-layer', (e) => {
-  const status = e.features[0].properties.status;
-  map.getCanvas().style.cursor =
-    (status === 'occupied') ? 'not-allowed' : 'pointer';
-});
+// Call after map initialization
+initializeMap();
+addHousesLayer();

@@ -108,19 +108,19 @@
 
     <!-- Interactive Map Preview (1.2) -->
     <section class="map-preview-section py-5">
-        <div class="container">
-            <h2 class="mb-4"><i class="fas fa-map-location-dot"></i> Villa Purita Subdivision</h2>
-            <div id="mapPreview" class="map-container" style="height: 650px;"></div>
-            <div class="mt-4 d-flex justify-content-between align-items-center">
-                <small class="text-muted"><i class="fas fa-info-circle"></i> Click on markers to view property details. Use scroll wheel to zoom.</small>
-                <div>
-                    <button class="btn btn-sm btn-outline-primary" onclick="map.fitBounds([[10.2550, 123.7970], [10.2600, 123.8050]])">
-                        <i class="fas fa-compass"></i> Reset View
-                    </button>
-                </div>
+    <div class="container">
+        <h2 class="mb-4"><i class="fas fa-map-location-dot"></i> Villa Purita Subdivision</h2>
+        <div id="mapPreview" class="map-container" style="height: 650px;"></div>
+        <div class="mt-4 d-flex justify-content-between align-items-center">
+            <small class="text-muted"><i class="fas fa-info-circle"></i> Click on markers to view property details. Use scroll wheel to zoom.</small>
+            <div>
+                <button class="btn btn-sm btn-outline-primary" onclick="resetMapView()">
+                    <i class="fas fa-compass"></i> Reset View
+                </button>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Subdivision Overview (1.1) -->
     <section id="subdivisions" class="subdivisions-section py-5">
