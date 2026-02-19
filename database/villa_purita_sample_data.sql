@@ -46,4 +46,4 @@ INSERT INTO availability_log (property_id, old_status, new_status, changed_by, r
 (2, 'vacant', 'occupied', 1, 'New resident moved in', NOW()),
 (6, 'occupied', 'vacant', 1, 'Previous resident relocated', NOW()),
 (7, 'vacant', 'vacant', 1, 'Unit prepared for new listing', NOW()),
-(11, 'vacant', 'for_sale', 1, 'Listed for sale by agent', NOW());
+(11, 'vacant', 'for_sale', 1, 'Listed for sale by homeowner', NOW());

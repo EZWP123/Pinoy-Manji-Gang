@@ -54,7 +54,7 @@ else if ($method === 'POST') {
 
 // Update inquiry status
 else if ($method === 'PUT') {
-    if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['admin', 'agent'])) {
+    if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
         echo json_encode(['success' => false, 'error' => 'Unauthorized']);
         exit;
     }

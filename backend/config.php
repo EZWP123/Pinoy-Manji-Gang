@@ -27,6 +27,21 @@ define('UPLOAD_PATH', './uploads/');
 define('MAX_UPLOAD_SIZE', 5242880); // 5MB
 
 // Session configuration
-session_start();
+// Increase session lifetime and configure secure cookie params before starting session
 ini_set('session.gc_maxlifetime', 3600); // 1 hour
+
+$cookieParams = session_get_cookie_params();
+session_set_cookie_params([
+    'lifetime' => 3600,
+    'path' => $cookieParams['path'] ?? '/',
+    'domain' => $cookieParams['domain'] ?? '',
+    // Set to true when using HTTPS in production
+    'secure' => false,
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ?>

@@ -9,7 +9,7 @@ require_once '../includes/Auth.php';
 $auth = new Auth($conn);
 
 // Check authorization
-if (!$auth->isLoggedIn() || !in_array($_SESSION['role'], ['admin', 'agent'])) {
+if (!$auth->isLoggedIn() || $_SESSION['role'] !== 'admin') {
     header('Location: ../../frontend/login.html');
     exit;
 }
@@ -55,11 +55,7 @@ while ($row = $result->fetch_assoc()) {
                                 <i class="fas fa-chart-line"></i> Dashboard
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="subdivisions.php">
-                                <i class="fas fa-map"></i> Subdivisions
-                            </a>
-                        </li>
+                        <!-- Subdivisions removed (single subdivision) -->
                         <li class="nav-item">
                             <a class="nav-link" href="properties.php">
                                 <i class="fas fa-home"></i> Properties

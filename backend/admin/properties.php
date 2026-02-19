@@ -9,7 +9,7 @@ require_once '../includes/Auth.php';
 $auth = new Auth($conn);
 
 // Check authorization (2.6 Unauthorized access prevention, 2.4 Role-based access control)
-if (!$auth->isLoggedIn() || !in_array($_SESSION['role'], ['admin', 'agent'])) {
+if (!$auth->isLoggedIn() || $_SESSION['role'] !== 'admin') {
     header('Location: ../../frontend/login.html');
     exit;
 }
@@ -17,10 +17,10 @@ if (!$auth->isLoggedIn() || !in_array($_SESSION['role'], ['admin', 'agent'])) {
 $user = $auth->getCurrentUser();
 
 // Get all properties
-$sql = "SELECT p.*, s.name as subdivision_name, u.full_name as agent_name
+$sql = "SELECT p.*, s.name as subdivision_name, u.full_name as homeowner_name
         FROM properties p
         JOIN subdivisions s ON p.subdivision_id = s.id
-        LEFT JOIN users u ON p.agent_id = u.id
+    LEFT JOIN users u ON p.homeowner_id = u.id
         ORDER BY p.created_at DESC";
 
 $result = $conn->query($sql);
@@ -55,11 +55,7 @@ while ($row = $result->fetch_assoc()) {
                                 <i class="fas fa-chart-line"></i> Dashboard
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="subdivisions.php">
-                                <i class="fas fa-map"></i> Subdivisions
-                            </a>
-                        </li>
+                        <!-- Subdivisions removed (single subdivision) -->
                         <li class="nav-item">
                             <a class="nav-link active" href="properties.php">
                                 <i class="fas fa-home"></i> Properties
@@ -104,10 +100,9 @@ while ($row = $result->fetch_assoc()) {
                                     <tr>
                                         <th>Unit#</th>
                                         <th>Subdivision</th>
-                                        <th>Type</th>
                                         <th>Status</th>
                                         <th>Price</th>
-                                        <th>Agent</th>
+                                        <th>Homeowner</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -116,14 +111,14 @@ while ($row = $result->fetch_assoc()) {
                                     <tr>
                                         <td><strong><?php echo htmlspecialchars($property['unit_number']); ?></strong></td>
                                         <td><?php echo htmlspecialchars($property['subdivision_name']); ?></td>
-                                        <td><span class="badge bg-secondary"><?php echo ucfirst($property['property_type']); ?></span></td>
+                                        <!-- property_type removed (all houses) -->
                                         <td>
                                             <span class="badge badge-<?php echo $property['status']; ?>">
                                                 <?php echo ucfirst(str_replace('_', ' ', $property['status'])); ?>
                                             </span>
                                         </td>
                                         <td>₱<?php echo number_format($property['price'], 2); ?></td>
-                                        <td><?php echo htmlspecialchars($property['agent_name'] ?? 'N/A'); ?></td>
+                                        <td><?php echo htmlspecialchars($property['homeowner_name'] ?? 'N/A'); ?></td>
                                         <td>
                                             <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editProperty(<?php echo $property['id']; ?>)">
                                                 <i class="fas fa-edit"></i>

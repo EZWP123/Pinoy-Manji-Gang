@@ -5,14 +5,14 @@
 CREATE DATABASE IF NOT EXISTS `subdi_housing_system`;
 USE `subdi_housing_system`;
 
--- Users Table (Admin and Agents)
+-- Users Table (Admin, Homeowners, Public Users)
 CREATE TABLE `users` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `username` VARCHAR(100) UNIQUE NOT NULL,
   `email` VARCHAR(100) UNIQUE NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   `full_name` VARCHAR(150) NOT NULL,
-  `role` ENUM('admin', 'agent', 'viewer') DEFAULT 'viewer',
+  `role` ENUM('admin', 'homeowner', 'viewer') DEFAULT 'viewer',
   `phone` VARCHAR(20),
   `profile_image` VARCHAR(255),
   `is_active` BOOLEAN DEFAULT TRUE,
@@ -47,7 +47,7 @@ CREATE TABLE `properties` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `subdivision_id` INT NOT NULL,
   `unit_number` VARCHAR(50) NOT NULL,
-  `property_type` ENUM('house', 'lot', 'condo', 'apartment') DEFAULT 'house',
+  `property_type` ENUM('house') DEFAULT 'house',
   `status` ENUM('occupied', 'vacant', 'for_sale') DEFAULT 'vacant',
   `price` DECIMAL(12, 2),
   `area_sqm` DECIMAL(10, 2),
@@ -60,11 +60,11 @@ CREATE TABLE `properties` (
   `images` JSON,
   `owner_name` VARCHAR(200),
   `owner_contact` VARCHAR(100),
-  `agent_id` INT,
+  `homeowner_id` INT,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (`subdivision_id`) REFERENCES `subdivisions`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`agent_id`) REFERENCES `users`(`id`) ON DELETE SET NULL,
+  FOREIGN KEY (`homeowner_id`) REFERENCES `users`(`id`) ON DELETE SET NULL,
   UNIQUE KEY `unique_unit` (`subdivision_id`, `unit_number`),
   INDEX `idx_status` (`status`),
   INDEX `idx_type` (`property_type`)

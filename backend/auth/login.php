@@ -25,13 +25,12 @@ $auth = new Auth($conn);
 
 // Attempt login
 if ($auth->login($data['username'], $data['password'])) {
-    // Check if user is admin
-    if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'agent') {
-        echo json_encode(['success' => true, 'message' => 'Login successful']);
-    } else {
-        session_destroy();
-        echo json_encode(['success' => false, 'error' => 'Insufficient permissions']);
+    // Regenerate session id again just after login call (extra safety)
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_regenerate_id(true);
     }
+    // Return success with role so frontend can redirect appropriately
+    echo json_encode(['success' => true, 'message' => 'Login successful', 'role' => $_SESSION['role']]);
 } else {
     echo json_encode(['success' => false, 'error' => 'Invalid username or password']);
 }

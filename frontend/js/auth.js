@@ -14,8 +14,8 @@ document.getElementById('loginForm')?.addEventListener('submit', function(e) {
     // Clear previous error
     errorAlert.classList.add('d-none');
 
-    // Send login request
-    fetch('../backend/auth/login.php', {
+    // Send login request (use Apache-hosted backend)
+    fetch('http://localhost/Pinoy-Manji-Gang/backend/auth/login.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -25,8 +25,15 @@ document.getElementById('loginForm')?.addEventListener('submit', function(e) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Redirect to admin panel
-            window.location.href = '../backend/admin/dashboard.php';
+            // Redirect based on role
+            const role = data.role || '';
+            if (role === 'admin') {
+                window.location.href = '../backend/admin/dashboard.php';
+            } else if (role === 'homeowner') {
+                window.location.href = 'listing-request.html';
+            } else {
+                window.location.href = 'index.html';
+            }
         } else {
             // Show error
             errorAlert.textContent = data.error || 'Login failed. Please try again.';
@@ -42,11 +49,11 @@ document.getElementById('loginForm')?.addEventListener('submit', function(e) {
 
 // Session check function
 function checkSession() {
-    fetch('../backend/auth/check-session.php')
+    fetch('http://localhost/Pinoy-Manji-Gang/backend/auth/check-session.php')
         .then(response => response.json())
         .then(data => {
             if (!data.logged_in && window.location.pathname.includes('admin')) {
-                window.location.href = '../login.html';
+                window.location.href = 'http://localhost/Pinoy-Manji-Gang/frontend/login.html';
             }
         })
         .catch(error => console.error('Session check error:', error));
@@ -54,13 +61,13 @@ function checkSession() {
 
 // Logout function (2.3 Administrator logout)
 function logout() {
-    fetch('../backend/auth/logout.php', {
+    fetch('http://localhost/Pinoy-Manji-Gang/backend/auth/logout.php', {
         method: 'POST'
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            window.location.href = '../../frontend/index.html';
+            window.location.href = 'http://localhost/Pinoy-Manji-Gang/frontend/index.html';
         }
     })
     .catch(error => console.error('Logout error:', error));

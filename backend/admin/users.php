@@ -50,11 +50,7 @@ while ($row = $result->fetch_assoc()) {
                                 <i class="fas fa-chart-line"></i> Dashboard
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="subdivisions.php">
-                                <i class="fas fa-map"></i> Subdivisions
-                            </a>
-                        </li>
+                        <!-- Subdivisions removed (single subdivision) -->
                         <li class="nav-item">
                             <a class="nav-link" href="properties.php">
                                 <i class="fas fa-home"></i> Properties
@@ -169,8 +165,8 @@ while ($row = $result->fetch_assoc()) {
                         <div class="mb-3">
                             <label class="form-label">Role *</label>
                             <select class="form-select" name="role" required>
-                                <option value="viewer">Viewer</option>
-                                <option value="agent">Agent</option>
+                                <option value="viewer">Public User</option>
+                                <option value="homeowner">Homeowner</option>
                                 <option value="admin">Admin</option>
                             </select>
                         </div>

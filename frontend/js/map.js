@@ -214,7 +214,6 @@ function addPropertyMarker(property) {
                     ${property.status.toUpperCase().replace(/_/g, ' ')}
                 </span>
             </div>
-            <p style="color: #2c3e50; font-size: 0.9rem; margin: 8px 0;"><strong>Type:</strong> ${property.property_type}</p>
             ${property.price ? `<p style="color: #2c3e50; font-size: 0.9rem; margin: 8px 0;"><strong>Price:</strong> <span style="color: #d4af37; font-weight: 800;">₱${formatPrice(property.price)}</span></p>` : ''}
             ${property.bedrooms ? `<p style="color: #2c3e50; font-size: 0.9rem; margin: 8px 0;"><strong>Beds:</strong> ${property.bedrooms} | <strong>Baths:</strong> ${property.bathrooms || 'N/A'}</p>` : ''}
             ${property.area_sqm ? `<p style="color: #2c3e50; font-size: 0.9rem; margin: 8px 0;"><strong>Area:</strong> ${property.area_sqm} sqm</p>` : ''}

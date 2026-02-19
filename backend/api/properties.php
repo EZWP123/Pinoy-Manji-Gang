@@ -42,17 +42,17 @@ if ($method === 'GET') {
 
 // Add new property
 else if ($method === 'POST') {
-    if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['admin', 'agent'])) {
+    if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
         echo json_encode(['success' => false, 'error' => 'Unauthorized']);
         exit;
     }
 
     $data = json_decode(file_get_contents("php://input"), true);
 
-    $stmt = $conn->prepare("INSERT INTO properties (subdivision_id, unit_number, property_type, status, price, area_sqm, bedrooms, bathrooms, description, latitude, longitude, agent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO properties (subdivision_id, unit_number, property_type, status, price, area_sqm, bedrooms, bathrooms, description, latitude, longitude, homeowner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $stmt->bind_param(
-        "isssdddiiids",
+        "isssddiiidsi",
         $data['subdivision_id'],
         $data['unit_number'],
         $data['property_type'],
@@ -76,7 +76,7 @@ else if ($method === 'POST') {
 
 // Update property
 else if ($method === 'PUT') {
-    if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['admin', 'agent'])) {
+    if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
         echo json_encode(['success' => false, 'error' => 'Unauthorized']);
         exit;
     }

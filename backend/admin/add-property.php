@@ -8,7 +8,7 @@ require_once '../includes/Auth.php';
 
 $auth = new Auth($conn);
 
-if (!$auth->isLoggedIn() || !in_array($_SESSION['role'], ['admin', 'agent'])) {
+if (!$auth->isLoggedIn() || $_SESSION['role'] !== 'admin') {
     header('Location: ../../frontend/login.html');
     exit;
 }
@@ -85,16 +85,7 @@ while ($row = $subdivisions_result->fetch_assoc()) {
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Property Type *</label>
-                                    <select class="form-select" name="property_type" required>
-                                        <option value="">Select Type</option>
-                                        <option value="house">House</option>
-                                        <option value="lot">Lot</option>
-                                        <option value="condo">Condo</option>
-                                        <option value="apartment">Apartment</option>
-                                    </select>
-                                </div>
+                                <input type="hidden" name="property_type" value="house">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Status *</label>
                                     <select class="form-select" name="status" required>

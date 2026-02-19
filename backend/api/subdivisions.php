@@ -42,38 +42,8 @@ if ($method === 'GET') {
     }
 }
 
-// Add new subdivision
-else if ($method === 'POST') {
-    if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-        echo json_encode(['success' => false, 'error' => 'Unauthorized']);
-        exit;
-    }
-
-    $data = json_decode(file_get_contents("php://input"), true);
-
-    $stmt = $conn->prepare("INSERT INTO subdivisions (name, description, location, latitude, longitude, total_units, developer_name, contact_info, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-    $stmt->bind_param(
-        "sssddiiss",
-        $data['name'],
-        $data['description'],
-        $data['location'],
-        $data['latitude'],
-        $data['longitude'],
-        $data['total_units'],
-        $data['developer_name'],
-        $data['contact_info'],
-        $_SESSION['user_id']
-    );
-
-    if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'id' => $conn->insert_id]);
-    } else {
-        echo json_encode(['success' => false, 'error' => $stmt->error]);
-    }
-}
-
 else {
+    // Only GET is allowed for subdivisions in single-subdivision mode
     echo json_encode(['success' => false, 'error' => 'Method not allowed']);
 }
 

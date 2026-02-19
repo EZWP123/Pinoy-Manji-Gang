@@ -10,7 +10,7 @@ require_once '../includes/Auth.php';
 $auth = new Auth($conn);
 
 // Check if user is logged in and has admin role (2.6 Unauthorized access prevention)
-if (!$auth->isLoggedIn() || !in_array($_SESSION['role'], ['admin', 'agent'])) {
+if (!$auth->isLoggedIn() || $_SESSION['role'] !== 'admin') {
     header('Location: ../../frontend/login.html');
     exit;
 }
@@ -21,7 +21,6 @@ $user = $auth->getCurrentUser();
 $statsQuery = "SELECT 
     (SELECT COUNT(*) FROM properties WHERE status = 'available') as available_properties,
     (SELECT COUNT(*) FROM properties WHERE status = 'sold') as sold_properties,
-    (SELECT COUNT(*) FROM subdivisions) as total_subdivisions,
     (SELECT COUNT(*) FROM inquiries WHERE status = 'new') as new_inquiries";
 
 $statsResult = $conn->query($statsQuery);
@@ -53,11 +52,7 @@ $stats = $statsResult->fetch_assoc();
                                 <i class="fas fa-chart-line"></i> Dashboard
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="subdivisions.php">
-                                <i class="fas fa-map"></i> Subdivisions
-                            </a>
-                        </li>
+                        <!-- Subdivisions link removed: focusing on single subdivision -->
                         <li class="nav-item">
                             <a class="nav-link" href="properties.php">
                                 <i class="fas fa-home"></i> Properties
@@ -86,13 +81,20 @@ $stats = $statsResult->fetch_assoc();
 
             <!-- Main Content -->
             <main class="col-md-10 main-content">
-                <!-- Top Bar -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3">Dashboard</h1>
-                    <div class="text-muted">
-                        <i class="fas fa-clock"></i> <span id="currentDate"></span>
+                <!-- Top Bar / Header -->
+                <header class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="h3 mb-0">Dashboard</h1>
+                        <small class="text-muted">Villa Purita — Admin Panel</small>
                     </div>
-                </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="text-end me-2">
+                            <div style="font-weight:700"><?php echo htmlspecialchars($user['full_name']); ?></div>
+                            <div class="text-muted" style="font-size:0.85rem;"><i class="fas fa-clock"></i> <span id="currentDate"></span></div>
+                        </div>
+                        <button class="btn btn-outline-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    </div>
+                </header>
 
                 <!-- Statistics Cards -->
                 <div class="row mb-4">
@@ -128,21 +130,7 @@ $stats = $statsResult->fetch_assoc();
                         </div>
                     </div>
 
-                    <div class="col-md-3 mb-3">
-                        <div class="card border-left-info">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h6 class="text-muted mb-2">Total Subdivisions</h6>
-                                        <h3 class="mb-0"><?php echo $stats['total_subdivisions']; ?></h3>
-                                    </div>
-                                    <div class="text-info" style="font-size: 2rem;">
-                                        <i class="fas fa-map"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Total Subdivisions card removed (single subdivision focus) -->
 
                     <div class="col-md-3 mb-3">
                         <div class="card border-left-warning">
@@ -186,17 +174,7 @@ $stats = $statsResult->fetch_assoc();
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Add New Subdivision</h5>
-                                <p class="text-muted small">Create a new subdivision</p>
-                                <a href="add-subdivision.php" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-plus"></i> Add Subdivision
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Add New Subdivision removed (single subdivision focus) -->
                 </div>
             </main>
         </div>

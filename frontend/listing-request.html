@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Homeowner Listing Request - SubdiHousing</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #1a365d 0%, #2d5a8c 100%);">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="index.html"><i class="fas fa-building"></i> SubdiHousing</a>
+        <div class="d-flex ms-auto align-items-center">
+            <span id="lrUser" class="text-white me-3"></span>
+            <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout</button>
+        </div>
+    </div>
+</nav>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Listing Request</div>
+                <div class="card-body">
+                    <form id="listingForm">
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" name="title" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Property Type</label>
+                            <input type="text" name="property_type" class="form-control" value="house" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Upload Photos</label>
+                            <input type="file" name="images[]" id="images" class="form-control" accept="image/*" multiple>
+                            <div id="preview" class="mt-2 d-flex gap-2 flex-wrap"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Asking Price</label>
+                            <input type="number" name="price" class="form-control" step="0.01">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contact Info</label>
+                            <input type="text" name="contact_info" class="form-control">
+                        </div>
+                        <div id="lrAlert" class="alert d-none" role="alert"></div>
+                        <button class="btn btn-primary">Submit Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/auth.js"></script>
+<script>
+// ensure user is logged in; show username
+fetch('../backend/auth/check-session.php')
+    .then(r => r.json())
+    .then(data => {
+        if (!data.logged_in) {
+            window.location.href = 'login.html';
+            return;
+        }
+        document.getElementById('lrUser').textContent = data.user.username || data.user.full_name || '';
+    })
+    .catch(()=> window.location.href = 'login.html');
+
+document.getElementById('listingForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData);
+        const alertEl = document.getElementById('lrAlert');
+        fetch('../backend/api/listing_requests.php', {
+            method: 'POST',
+            body: formData
+        })
+    .then(r => r.json())
+    .then(res => {
+        if (res.success) {
+            alertEl.className = 'alert alert-success';
+            alertEl.textContent = 'Request submitted successfully.';
+            alertEl.classList.remove('d-none');
+            this.reset();
+        } else {
+            alertEl.className = 'alert alert-danger';
+            alertEl.textContent = res.error || 'Submission failed.';
+            alertEl.classList.remove('d-none');
+        }
+    })
+    .catch(err => {
+        alertEl.className = 'alert alert-danger';
+        alertEl.textContent = 'Network error.';
+        alertEl.classList.remove('d-none');
+    });
+    // image preview
+    document.getElementById('images').addEventListener('change', function(){
+        const preview = document.getElementById('preview');
+        preview.innerHTML = '';
+        Array.from(this.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '120px';
+                img.style.height = '80px';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '6px';
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+});
+</script>
+</body>
+</html>
