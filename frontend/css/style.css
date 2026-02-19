@@ -743,3 +743,36 @@ footer hr {
         font-size: 0.9rem;
     }
 }
+/* Side Panel */
+.property-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 350px;
+    height: 100%;
+    background: white;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.2);
+    transition: right 0.3s ease;
+    z-index: 2000;
+    padding: 20px;
+}
+
+.property-panel.active {
+    right: 0;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.property-panel img {
+    border-radius: 10px;
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+    margin: 0 0 15px 0;
+}

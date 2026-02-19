@@ -7,7 +7,55 @@
 document.addEventListener('DOMContentLoaded', function() {
     mapModule.init();
     loadSubdivisions();
+    initializeLegendClickHandlers();
 });
+
+// Initialize legend click handlers
+function initializeLegendClickHandlers() {
+    const legendItems = document.querySelectorAll('.legend-item');
+    console.log('Found ' + legendItems.length + ' legend items');
+    
+    legendItems.forEach(item => {
+        item.style.cursor = 'pointer';
+        
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Legend clicked:', this);
+            
+            if (this.classList.contains('vacant')) {
+                console.log('Vacant legend clicked - showing vacant sample property');
+                // Show first vacant property from housesGeoJSON
+                openPanel({
+                    title: 'House 101',
+                    status: 'vacant',
+                    block: 'Block 3',
+                    lot: 'Lot 12',
+                    images: [
+                        'images/property1/haha.jpg',
+                        'images/property1/huhu.jpg',
+                        'images/property1/purita.jpg',
+                        'images/property1/hehe.jpg'
+                    ]
+                });
+            } else if (this.classList.contains('occupied')) {
+                alert('Occupied properties cannot be viewed');
+            } else if (this.classList.contains('for-sale')) {
+                alert('For-sale properties listing coming soon');
+            }
+        });
+
+        // Hover effect
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+            this.style.boxShadow = '0 12px 30px rgba(0,0,0,0.2)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+            this.style.boxShadow = '';
+        });
+    });
+}
 
 // Load subdivisions and display overview cards (1.1 Subdivision overview information)
 function loadSubdivisions() {

@@ -111,6 +111,23 @@
     <div class="container">
         <h2 class="mb-4"><i class="fas fa-map-location-dot"></i> Villa Purita Subdivision</h2>
         <div id="mapPreview" class="map-container" style="height: 650px;"></div>
+
+        <!-- Property Side Panel -->
+<div id="propertyPanel" class="property-panel">
+    <div class="panel-header">
+        <h5 id="panelTitle">House Details</h5>
+        <button onclick="closePanel()" class="btn-close"></button>
+    </div>
+
+    <img id="panelImage" src="" alt="House Image" class="img-fluid mb-3">
+
+    <div class="panel-body">
+        <p><strong>Status:</strong> <span id="panelStatus"></span></p>
+        <p><strong>Block:</strong> <span id="panelBlock"></span></p>
+        <p><strong>Lot:</strong> <span id="panelLot"></span></p>
+    </div>
+</div>
+
         <div class="mt-4 d-flex justify-content-between align-items-center">
             <small class="text-muted"><i class="fas fa-info-circle"></i> Click on markers to view property details. Use scroll wheel to zoom.</small>
             <div>
@@ -156,6 +173,82 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="searchBtn">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Property Details Modal with Image Gallery -->
+    <div class="modal fade" id="propertyDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-home"></i> <span id="propertyTitle">Property Details</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-4">
+                        <!-- Image Carousel on Left -->
+                        <div class="col-md-8">
+                            <div id="propertyImageCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner" id="carouselInner">
+                                    <!-- Images loaded here -->
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#propertyImageCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#propertyImageCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Property Details on Right -->
+                        <div class="col-md-4">
+                            <div class="property-details-panel p-4" style="background: #f8f9fa; border-radius: 12px; height: 100%; overflow-y: auto;">
+                                <h5 style="color: #1a365d; font-weight: 800; margin-bottom: 20px;" id="propUnitNumber">-</h5>
+                                
+                                <div class="mb-3">
+                                    <span id="propStatus" class="badge bg-success" style="font-size: 12px; padding: 8px 12px;">Vacant</span>
+                                </div>
+
+                                <div class="property-info">
+                                    <p class="mb-3">
+                                        <strong>Price:</strong><br>
+                                        <span id="propPrice" style="color: #d4af37; font-weight: 800; font-size: 1.3rem;">-</span>
+                                    </p>
+
+                                    <p class="mb-3">
+                                        <strong>Bedrooms:</strong><br>
+                                        <span id="propBedrooms">-</span>
+                                    </p>
+
+                                    <p class="mb-3">
+                                        <strong>Bathrooms:</strong><br>
+                                        <span id="propBathrooms">-</span>
+                                    </p>
+
+                                    <p class="mb-3">
+                                        <strong>Area:</strong><br>
+                                        <span id="propArea">-</span>
+                                    </p>
+
+                                    <hr>
+
+                                    <p class="mb-3">
+                                        <strong>Description:</strong><br>
+                                        <span id="propDescription" style="color: #2c3e50; font-size: 0.9rem;">-</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="alert('Inquiry feature coming soon!')">
+                        <i class="fas fa-phone"></i> Inquire Now
+                    </button>
                 </div>
             </div>
         </div>

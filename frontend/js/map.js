@@ -91,6 +91,7 @@ function initializeMap(containerId = 'mapPreview') {
 
     // Load subdivisions and display on map
     loadSubdivisionsForMap();
+    addHousesLayer();
 }
 
 // Load subdivisions and add markers to map (3.1, 3.2, 3.3 Interactive Map Management)
@@ -319,54 +320,121 @@ const housesGeoJSON = {
     "features": [
         {
             "type": "Feature",
-            "properties": { "status": "vacant", "name": "House 101" },
-            "geometry": { "type": "Point", "coordinates": [123.802, 10.260] } // Leaflet uses [lat, lng]
+            "properties": {
+                "status": "vacant",
+                "name": "House 101",
+                "block": "Block 3",
+                "lot": "Lot 12",
+                
+                "images": ["house2.jpg", "purita.jpg", "purita.jpg", "purita.jpg"]
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [123.802, 10.260]
+            }
         },
         {
             "type": "Feature",
-            "properties": { "status": "occupied", "name": "House 102" },
-            "geometry": { "type": "Point", "coordinates": [123.802, 10.258] }
-        },
-         {
-            "type": "Feature",
-            "properties": { "status": "for_sale", "name": "House 104" },
-            "geometry": { "type": "Point", "coordinates": [123.802, 10.259] }
+            "properties": {
+                "status": "occupied",
+                "name": "House 102",
+                "block": "Block 2",
+                "lot": "Lot 5",
+                "images": []
+            },
+            "geometry": {
+                "type": "Point",
+              "coordinates": [123.802, 10.258]
+
+            }
         }
-        
     ]
 };
+
 function addHousesLayer() {
     L.geoJSON(housesGeoJSON, {
+
         pointToLayer: function(feature, latlng) {
+
             const colorMap = {
                 'vacant': '#2ecc71',
                 'for_sale': '#3498db',
                 'occupied': '#7f8c8d'
             };
+
             return L.circleMarker(latlng, {
                 radius: 8,
                 fillColor: colorMap[feature.properties.status] || '#ccc',
                 color: '#fff',
                 weight: 1,
-                opacity: 1,
                 fillOpacity: 0.9
             });
         },
+
         onEachFeature: function(feature, layer) {
+
             const status = feature.properties.status;
-            layer.bindPopup(`<b>${feature.properties.name}</b><br>Status: ${status}`);
-            
-            layer.on('mouseover', function() { layer.openPopup(); });
-            layer.on('mouseout', function() { layer.closePopup(); });
 
             layer.on('click', function() {
-                if (status === 'occupied') return; // block clicks
-                alert(`Clicked ${feature.properties.name} (${status})`);
+
+                // 🚫 Block occupied houses
+                if (status === 'occupied') return;
+
+                openPanel({
+                    title: feature.properties.name,
+                    status: status,
+                    block: feature.properties.block,
+                    lot: feature.properties.lot,
+                    images: feature.properties.images
+                });
+
             });
+
         }
+
     }).addTo(map);
 }
 
+
+// Call after map initialization
+
+function openPanel(data) {
+    console.log('Opening panel with data:', data);
+    
+    document.getElementById("panelTitle").innerText = data.title;
+    document.getElementById("panelStatus").innerText = data.status;
+    document.getElementById("panelBlock").innerText = data.block;
+    document.getElementById("panelLot").innerText = data.lot;
+
+    const panelImage = document.getElementById("panelImage");
+    
+    // Get the first image
+    const imageUrl = (data.images && data.images.length > 0) 
+        ? data.images[0] 
+        : "purita.jpg";
+    
+    console.log('Setting image URL to:', imageUrl);
+    panelImage.src = imageUrl;
+    
+    // Debug: log when image loads or fails
+    panelImage.onload = function() {
+        console.log('Image loaded successfully:', imageUrl);
+    };
+    
+    panelImage.onerror = function() {
+        console.error('Image failed to load:', imageUrl);
+        this.src = "purita.jpg";
+    };
+
+    document.getElementById("propertyPanel").classList.add("active");
+    console.log('Panel opened');
+}
+
+
+
+function closePanel() {
+    document.getElementById("propertyPanel").classList.remove("active");
+}
 // Call after map initialization
 initializeMap();
-addHousesLayer();
+
