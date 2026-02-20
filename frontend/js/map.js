@@ -355,7 +355,7 @@ const housesGeoJSON = {
                 "name": "House 103",
                 "block": "Block 1",
                 "lot": "Lot 7",
-                "images": []
+                "images": ["purita1.jpg"]
             },
             "geometry": {
                 "type": "Point",
@@ -441,7 +441,7 @@ function openPanel(data) {
     // Get the first image
     const imageUrl = (data.images && data.images.length > 0) 
         ? data.images[0] 
-        : "purita1.jpg";
+        : "house2.jpg";
     
     console.log('Setting image URL to:', imageUrl);
     panelImage.src = imageUrl;
@@ -453,7 +453,7 @@ function openPanel(data) {
     
     panelImage.onerror = function() {
         console.error('Image failed to load:', imageUrl);
-        this.src = "purita1.jpg";
+        this.src = "house2.jpg";
     };
 
     // Create / show overlay
