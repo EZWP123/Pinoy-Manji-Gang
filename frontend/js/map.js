@@ -326,7 +326,7 @@ const housesGeoJSON = {
                 "block": "Block 3",
                 "lot": "Lot 12",
                 
-                "images": ["house2.jpg", "purita.jpg", "purita.jpg", "purita.jpg"]
+                "images": ["house2.jpg", "purita1.jpg", "purita1.jpg", "purita1.jpg"]
             },
             "geometry": {
                 "type": "Point",
@@ -406,12 +406,27 @@ function openPanel(data) {
     document.getElementById("panelBlock").innerText = data.block;
     document.getElementById("panelLot").innerText = data.lot;
 
+    // Populate additional fields
+    try {
+        document.getElementById("panelPrice").innerText = data.price ? '₱' + formatPrice(data.price) : '$1000000';
+        document.getElementById("panelPropertyType").innerText = data.property_type || data.type || 'Single Family';
+        document.getElementById("panelYearBuilt").innerText = data.year_built || '2020';
+        document.getElementById("panelTotalArea").innerText = data.area_sqm ? data.area_sqm + ' sqm' : (data.area ? data.area : 'hmm');
+        document.getElementById("panelLotSize").innerText = data.lot_size ? data.lot_size + (data.lot_size_unit ? (' ' + data.lot_size_unit) : ' sqm') : 'N/A';
+        document.getElementById("panelBedrooms").innerText = data.bedrooms || '3';
+        document.getElementById("panelBathrooms").innerText = data.bathrooms || '2';
+        document.getElementById("panelGarage").innerText = data.garage_spaces || 'N/A';
+        document.getElementById("panelStories").innerText = data.stories || data.floor_level || '2';
+    } catch (e) {
+        console.warn('Some panel fields missing in DOM:', e);
+    }
+
     const panelImage = document.getElementById("panelImage");
     
     // Get the first image
     const imageUrl = (data.images && data.images.length > 0) 
         ? data.images[0] 
-        : "purita.jpg";
+        : "purita1.jpg";
     
     console.log('Setting image URL to:', imageUrl);
     panelImage.src = imageUrl;
@@ -423,7 +438,7 @@ function openPanel(data) {
     
     panelImage.onerror = function() {
         console.error('Image failed to load:', imageUrl);
-        this.src = "purita.jpg";
+        this.src = "purita1.jpg";
     };
 
     document.getElementById("propertyPanel").classList.add("active");
