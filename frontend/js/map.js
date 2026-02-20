@@ -347,6 +347,21 @@ const housesGeoJSON = {
               "coordinates": [123.802, 10.258]
 
             }
+        },
+         {
+            "type": "Feature",
+            "properties": {
+                "status": "for_sale",
+                "name": "House 103",
+                "block": "Block 1",
+                "lot": "Lot 7",
+                "images": []
+            },
+            "geometry": {
+                "type": "Point",
+              "coordinates": [123.802, 10.255]
+
+            }
         }
     ]
 };
@@ -441,14 +456,40 @@ function openPanel(data) {
         this.src = "purita1.jpg";
     };
 
-    document.getElementById("propertyPanel").classList.add("active");
+    // Create / show overlay
+    let overlay = document.getElementById('panelOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'panelOverlay';
+        // class-based styling handled in CSS; ensure clicking overlay closes panel
+        overlay.addEventListener('click', closePanel);
+        document.body.appendChild(overlay);
+        // allow CSS transition to apply
+        requestAnimationFrame(() => overlay.classList.add('show'));
+    } else {
+        overlay.classList.add('show');
+    }
+
+    // Center the panel (use 'center' class so original right-slide still available)
+    const panel = document.getElementById("propertyPanel");
+    panel.classList.add("active", "center");
+
     console.log('Panel opened');
 }
 
-
-
 function closePanel() {
-    document.getElementById("propertyPanel").classList.remove("active");
+    const panel = document.getElementById("propertyPanel");
+    panel.classList.remove("active", "center");
+
+    const overlay = document.getElementById('panelOverlay');
+    if (overlay) {
+        overlay.classList.remove('show');
+        // remove overlay after transition
+        overlay.addEventListener('transitionend', function onEnd() {
+            overlay.removeEventListener('transitionend', onEnd);
+            if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        });
+    }
 }
 // Call after map initialization
 initializeMap();
